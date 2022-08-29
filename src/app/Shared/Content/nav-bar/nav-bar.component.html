@@ -1,0 +1,56 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Offcanvas navbar large" style="margin-bottom:28px">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" (click)="open(content)" style="display: block;">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div [ngClass]="login.NombreUsuario.length>0 ? 'col-md-3' : 'col-md-12'" style="text-align: center;">
+      <a class="navbar-brand" href="#">Administracion de Centro Educativo</a>
+    </div>
+    <ul class="nav navbar-nav navbar-right" *ngIf="login.NombreUsuario.length>0">
+      <div ngbDropdown class="d-inline-block">
+        <button type="button" class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Hola,
+          {{login.NombreUsuario }}</button>
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+          <button ngbDropdownItem (click)="CerrarSesion()">Cerrar Sesion</button>
+        </div>
+      </div>
+    </ul>
+
+
+
+
+  </div>
+</nav>
+
+<ng-template #content let-offcanvas>
+  <div class="offcanvas-header">
+    <h4 class="offcanvas-title" id="offcanvas-basic-title">Centro Educativo</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="offcanvas.dismiss('')"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div class="list-group">
+
+      <!--<button href="#" class="list-group-item list-group-item-action list-group-item-primary"> <i class="fa fa-user"></i>&nbsp;  Usuarios</button>-->
+      <button routerLink="core/RegistroCurso"
+        class="list-group-item list-group-item-action list-group-item-secondary">
+        <i class="fa-solid fa-book"> </i>&nbsp;Cursos</button>
+      <button routerLink="core/RegistroAlumno" class="list-group-item list-group-item-action list-group-item-success"><i
+          class="fa-solid fa-graduation-cap"></i>&nbsp;Alumnos</button>
+      <button routerLink="core/RegistroInscripcion"
+          class="list-group-item list-group-item-action list-group-item-secondary">
+          <i class="fa-solid fa-pen-to-square"></i> &nbsp;Inscripciones</button>
+      <button *ngIf="login.IsAdmin" routerLink="core/RegistroUsuario" 
+      class="list-group-item list-group-item-action list-group-item-success">
+      <i class="fa-solid fa-users"></i>&nbsp;Usuarios</button>
+        
+
+          
+    </div>
+
+    <div class="text-end">
+
+    </div>
+  </div>
+</ng-template>
+
+<hr>

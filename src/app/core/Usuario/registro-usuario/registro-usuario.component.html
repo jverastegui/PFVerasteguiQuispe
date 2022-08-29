@@ -1,0 +1,187 @@
+<div class="card">
+    <div class="card-header">
+        Registro Usuario
+    </div>
+    <div class="card-body">
+
+      
+            <div class="mb-3">
+                <label for="txtNombreBusqueda" class="form-label">Nombres Usuario</label>
+                <input type="text" (ngModelChange)="changeBuscar($event)"   [(ngModel)]="NombreBuscar" class="form-control" id="txtNombreBusqueda"
+                    placeholder="Ingrese Nombre Usuario para la busqueda" />
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <button class="btn btn-lg btn-outline-primary" style="margin-left: 25px;"
+                        (click)="open(content)">Nuevo</button>
+                    <button class="btn btn-lg btn-outline-primary" style="margin-left: 25px;"
+                        (click)="LimpiarBusqueda()">Limpiar Busqueda</button>
+                </div>
+
+            </div>
+
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th >Eliminar</th>
+                        <th >Editar</th>
+                        <th >Nombres</th>
+    
+                        <th >Apellido Paterno</th>
+                        <th >Apellido Materno</th>
+                        <th >Usuario</th>
+    
+                        <th >Rol</th>
+    
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let usuario of  ObsUsuario  | async;let indexOfelement=index">
+                        <td>
+                            <button type="button" class="btn btn-primary" (click)="EliminarUsuario(usuario.idUsuario)">
+                                <span class="glyphicon glyphicon-play" aria-hidden="true"></span> Eliminar
+                            </button>
+    
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-primary" (click)="EditarUsuario(usuario,content)">
+                                <span class="glyphicon glyphicon-play" aria-hidden="true"></span> Editar
+                            </button>
+    
+                        </td>
+                        <td> {{usuario.nombres }}                        </td>
+                        <td> {{usuario.apellidoPaterno}}</td>
+                        <td> {{usuario.apellidoMaterno}}</td>
+    
+                        <td> {{usuario.userName}}</td>
+    
+                        <td> {{usuario.rol?.nombre}}</td>
+    
+    
+                    </tr>
+                </tbody>
+            </table>
+    
+    </div>
+</div>
+
+<ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{tituloModal}}</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <form action="#" [formGroup]="formulario" (ngSubmit)="submit($event)" class="">
+            <input type="hidden" name="IdUsuario" formControlName="IdUsuario">
+           
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="cboAlumno" class="form-label">Alumno (Opcional)</label>
+                                <select id="cboAlumno" (change)="changeAlumno($event)"
+                                    class="form-control" formControlName="IdAlumno">
+                                    <option value="0" selected>Ninguno</option>
+                                    <option *ngFor="let alumno of ObsAlumnos | async"
+                                        [value]="alumno.idAlumno">{{ (alumno.nombres + ' ' + alumno.apellidoPaterno + ' ' + alumno.apellidoMaterno).toUpperCase() }}</option>
+                                </select>
+
+                            
+                            </div>
+                            <div class="col-md-6">
+                                <label for="txtNombres" class="form-label">Nombres</label>
+                                <input type="text" class="form-control"
+                                    [ngClass]="formulario.get('Nombres')?.status=='INVALID' && formulario.get('Nombres')?.touched==true ? 'Invalid-Input' : ( formulario.get('Nombres')?.status=='VALID'  ? 'Valid-Input': '')"
+                                    id="txtNombres" formControlName="Nombres"
+                                    placeholder="Ingrese el Nombre" />
+
+                                <div *ngIf="formulario.get('Nombres')?.errors?.['required'] && formulario.get('Nombres')?.touched==true"
+                                    class="invalid-feedback" style="display: block;">* Campo Obligatorio</div>
+                            </div>
+                           
+                           
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="txtApePat" class="form-label">Apellido Paterno</label>
+                                <input type="text"
+                                    [ngClass]="formulario.get('ApellidoPaterno')?.status=='INVALID' && formulario.get('ApellidoPaterno')?.touched==true ? 'Invalid-Input' : (formulario.get('ApellidoPaterno')?.status=='VALID' ? 'Valid-Input' : '')"
+                                    class="form-control" id="txtApePat" formControlName="ApellidoPaterno"
+                                    placeholder="Apellido Paterno">
+                                <div *ngIf="formulario.get('ApellidoPaterno')?.errors?.['required'] && formulario.get('ApellidoPaterno')?.touched==true"
+                                    class="invalid-feedback" style="display: block;">* Campo Obligatorio</div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="txtApeMat" class="form-label">Apellido Materno</label>
+                                <input type="text"
+                                    [ngClass]="formulario.get('ApellidoMaterno')?.status=='INVALID' && formulario.get('ApellidoMaterno')?.touched==true ? 'Invalid-Input' : (formulario.get('ApellidoMaterno')?.status=='VALID' ? 'Valid-Input' : '')"
+                                    class="form-control" id="txtApeMat" formControlName="ApellidoMaterno"
+                                    placeholder="Apellido Paterno">
+                                <div *ngIf="formulario.get('ApellidoMaterno')?.errors?.['required'] && formulario.get('ApellidoMaterno')?.touched==true"
+                                    class="invalid-feedback" style="display: block;">* Campo Obligatorio</div>
+                            </div>
+
+
+
+                            <div class="col-md-4">
+                                <label for="txtUser" class="form-label">Nombre Usuario</label>
+                                <input type="text"
+                                    [ngClass]="formulario.get('Usuario')?.status=='INVALID' && formulario.get('Usuario')?.touched==true ? 'Invalid-Input' : ( formulario.get('Usuario')?.status=='VALID' ? 'Valid-Input':'')"
+                                    class="form-control" id="txtUser" placeholder="Nombre Usuario"
+                                    formControlName="Usuario">
+                                <div *ngIf="formulario.get('Usuario')?.errors?.['required'] && formulario.get('Usuario')?.touched==true "
+                                    class="invalid-feedback" style="display: block;">* Campo Obligatorio</div>
+                            </div>
+                            
+                           
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="txtPass" class="form-label">Contraseña</label>
+                                <input type="password"
+                                    [ngClass]="formulario.get('Password')?.status=='INVALID'  && formulario.get('Password')?.touched==true? 'Invalid-Input' : (formulario.get('Password')?.status=='VALID' ? 'Valid-Input' : '')"
+                                    class="form-control" id="txtPass" placeholder="Contraseña" formControlName="Password">
+                                <div *ngIf="formulario.get('Password')?.errors?.['required'] && formulario.get('Password')?.touched==true"
+                                    class="invalid-feedback" style="display: block;">* Campo Obligatorio</div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="txtPass2" class="form-label">Confirmar Contraseña</label>
+                                <input type="password"
+                                    [ngClass]="formulario.get('Password2')?.status=='INVALID'  && formulario.get('Password2')?.touched==true? 'Invalid-Input' : (formulario.get('Password2')?.status=='VALID' ? 'Valid-Input' : '')"
+                                    class="form-control" id="txtPass2" placeholder="Contraseña" formControlName="Password2">
+                                <div *ngIf="formulario.get('Password2')?.errors?.['required'] && formulario.get('Password2')?.touched==true"
+                                    class="invalid-feedback" style="display: block;">* Campo Obligatorio</div>
+                            </div>
+
+
+                            <div class="col-md-4">
+                                <label for="cboRol" class="form-label">Rol</label>
+                                <select id="cboRol"
+                                    class="form-control" formControlName="IdRol">
+                                    <option value="0">Seleccione</option>
+                                    <option *ngFor="let rol of ObsRol | async"
+                                        [value]="rol.idRol">{{ rol.nombre.toUpperCase() }}</option>
+                                </select>
+
+                            
+                            </div>
+                          
+                        </div>
+
+
+
+
+
+
+
+            <div class="col-md-12" style="text-align: center; padding-top: 30px;">
+                <button type="submit" class="btn btn-primary" [disabled]="!formulario.valid">Guardar</button>
+                <div *ngIf="!formulario.valid" style="display: block;" class="invalid-feedback">* Es necesario
+                    completar todos los campos</div>
+            </div>
+        </form>
+    </div>
+
+</ng-template>

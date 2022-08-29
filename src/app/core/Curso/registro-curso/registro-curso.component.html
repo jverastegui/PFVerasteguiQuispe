@@ -1,0 +1,179 @@
+<div class="card">
+    <div class="card-header">
+        Registro Curso
+    </div>
+    <div class="card-body">
+
+      
+            <div class="mb-3">
+                <label for="txtNombreBusqueda" class="form-label">Nombres Curso</label>
+                <input type="text" (ngModelChange)="changeBuscar($event)"   [(ngModel)]="NombreBuscar" class="form-control" id="txtNombreBusqueda"
+                    placeholder="Ingrese Nombre Curso para la busqueda" />
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <button class="btn btn-lg btn-outline-primary" style="margin-left: 25px;"
+                        (click)="open(content)">Nuevo</button>
+                    <button class="btn btn-lg btn-outline-primary" style="margin-left: 25px;"
+                        (click)="LimpiarBusqueda()">Limpiar Busqueda</button>
+                </div>
+
+            </div>
+
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th *ngIf="ServLogin.IsAdmin">Eliminar</th>
+                        <th *ngIf="ServLogin.IsAdmin">Editar</th>
+                        <th >Curso</th>
+    
+                        <th >Profesor</th>
+                        <th >Horas Academicas</th>
+                        <th >Horario</th>
+    
+                        <th >Fecha Inicio</th>
+    
+                        <th >Fecha Fin</th>
+                        <th >Hora Inicio</th>
+                        <th >Hora Fin</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let curso of  ObsCursos  | async;let indexOfelement=index">
+                        <td *ngIf="ServLogin.IsAdmin">
+                            <button type="button" class="btn btn-primary" (click)="EliminarCurso(curso.idCurso)">
+                                <span class="glyphicon glyphicon-play" aria-hidden="true"></span> Eliminar
+                            </button>
+    
+                        </td>
+                        <td *ngIf="ServLogin.IsAdmin">
+                            <button type="button" class="btn btn-primary" (click)="EditarCurso(curso,content)">
+                                <span class="glyphicon glyphicon-play" aria-hidden="true"></span> Editar
+                            </button>
+    
+                        </td>
+                        <td> {{curso.nombreCurso }}                        </td>
+                        <td> {{curso.profesor}}</td>
+                        <td> {{curso.horasAcademicas}}</td>
+    
+                        <td> {{curso.horario}}</td>
+    
+                        <td> {{curso.fechaInicio | date}}</td>
+                        <td> {{curso.fechaFin | date}}</td>
+                        <td> {{curso.horaInicio }}</td>
+                        <td> {{curso.horaFin }}</td>
+    
+    
+                    </tr>
+                </tbody>
+            </table>
+    
+    </div>
+</div>
+
+<ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{tituloModal}}</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <form action="#" [formGroup]="formulario" (ngSubmit)="submit($event)" class="">
+            <input type="hidden" name="IdCurso" formControlName="IdCurso">
+           
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="txtNombreCurso" class="form-label">Curso</label>
+                                <input type="text" class="form-control"
+                                    [ngClass]="formulario.get('nombreCurso')?.status=='INVALID' && formulario.get('nombreCurso')?.touched==true ? 'Invalid-Input' : ( formulario.get('nombreCurso')?.status=='VALID'  ? 'Valid-Input': '')"
+                                    id="txtNombreCurso" formControlName="nombreCurso"
+                                    placeholder="Ingrese el Curso" />
+
+                                <div *ngIf="formulario.get('nombreCurso')?.errors?.['required'] && formulario.get('nombreCurso')?.touched==true"
+                                    class="invalid-feedback" style="display: block;">* Campo Obligatorio</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="txtProfesor" class="form-label">Profesor</label>
+                                <input type="text"
+                                    [ngClass]="formulario.get('profesor')?.status=='INVALID' && formulario.get('profesor')?.touched==true ? 'Invalid-Input' : (formulario.get('profesor')?.status=='VALID' ? 'Valid-Input' : '')"
+                                    class="form-control" id="txtProfesor" formControlName="profesor"
+                                    placeholder="Profesor">
+                                <div *ngIf="formulario.get('profesor')?.errors?.['required'] && formulario.get('profesor')?.touched==true"
+                                    class="invalid-feedback" style="display: block;">* Campo Obligatorio</div>
+                            </div>
+                           
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="txtHoras" class="form-label">Horas Academicas</label>
+                                <input type="number"
+                                    [ngClass]="formulario.get('horasAcademicas')?.status=='INVALID' && formulario.get('horasAcademicas')?.touched==true ? 'Invalid-Input' : ( formulario.get('horasAcademicas')?.status=='VALID' ? 'Valid-Input':'')"
+                                    class="form-control" id="txtHoras" placeholder="Horas Academicas"
+                                    formControlName="horasAcademicas">
+                                <div *ngIf="formulario.get('horasAcademicas')?.errors?.['required'] && formulario.get('horasAcademicas')?.touched==true "
+                                    class="invalid-feedback" style="display: block;">* Campo Obligatorio</div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="txtHorario" class="form-label">Horario</label>
+                                <input type="text"
+                                    [ngClass]="formulario.get('horario')?.status=='INVALID' && formulario.get('horario')?.touched==true ? 'Invalid-Input' : ( formulario.get('horario')?.status=='VALID' ? 'Valid-Input':'')"
+                                    class="form-control" id="txtHorario" placeholder="Horario"
+                                    formControlName="horario">
+                                <div *ngIf="formulario.get('horario')?.errors?.['required'] && formulario.get('horario')?.touched==true "
+                                    class="invalid-feedback" style="display: block;">* Campo Obligatorio</div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="txtFecIni" class="form-label">Fecha Inicio</label>
+                                <input type="date"
+                                [ngClass]="formulario.get('fechaInicio')?.status=='INVALID' && formulario.get('fechaInicio')?.touched==true ? 'Invalid-Input' : ( formulario.get('fechaInicio')?.status=='VALID' ? 'Valid-Input':'')"
+                                class="form-control" id="txtFecIni" placeholder="Fecha Inicio"
+                                formControlName="fechaInicio">
+
+                                <div *ngIf="formulario.get('fechaInicio')?.errors?.['required'] && formulario.get('fechaInicio')?.touched==true "
+                                    class="invalid-feedback" style="display: block;">* Campo Obligatorio</div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="txtFecFin" class="form-label">Fecha Fin</label>
+                                <input type="date"
+                                    [ngClass]="formulario.get('fechaFin')?.status=='INVALID'  && formulario.get('fechaFin')?.touched==true? 'Invalid-Input' : (formulario.get('fechaFin')?.status=='VALID' ? 'Valid-Input' : '')"
+                                    class="form-control" id="txtFecFin" placeholder="Fecha Fin" formControlName="fechaFin">
+                                <div *ngIf="formulario.get('fechaFin')?.errors?.['required'] && formulario.get('fechaFin')?.touched==true"
+                                    class="invalid-feedback" style="display: block;">* Campo Obligatorio</div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="horaInicio" class="form-label">Hora Inicio</label>
+                                <input type="time"
+                                    [ngClass]="formulario.get('horaInicio')?.status=='INVALID'  && formulario.get('horaInicio')?.touched==true? 'Invalid-Input' : (formulario.get('horaInicio')?.status=='VALID' ? 'Valid-Input' : '')"
+                                    class="form-control" id="horaInicio" placeholder="Hora Inicio" formControlName="horaInicio">
+                                <div *ngIf="formulario.get('horaInicio')?.errors?.['required'] && formulario.get('horaInicio')?.touched==true"
+                                    class="invalid-feedback" style="display: block;">* Campo Obligatorio</div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="horaFin" class="form-label">Hora Fin</label>
+                                <input type="time"
+                                    [ngClass]="formulario.get('horaFin')?.status=='INVALID'  && formulario.get('horaFin')?.touched==true? 'Invalid-Input' : (formulario.get('horaFin')?.status=='VALID' ? 'Valid-Input' : '')"
+                                    class="form-control" id="horaFin" placeholder="Hora Fin" formControlName="horaFin">
+                                <div *ngIf="formulario.get('horaFin')?.errors?.['required'] && formulario.get('horaFin')?.touched==true"
+                                    class="invalid-feedback" style="display: block;">* Campo Obligatorio</div>
+                            </div>
+                        </div>
+
+
+
+
+
+
+
+            <div class="col-md-12" style="text-align: center; padding-top: 30px;">
+                <button type="submit" class="btn btn-primary" [disabled]="!formulario.valid">Guardar</button>
+                <div *ngIf="!formulario.valid" style="display: block;" class="invalid-feedback">* Es necesario
+                    completar todos los campos</div>
+            </div>
+        </form>
+    </div>
+
+</ng-template>

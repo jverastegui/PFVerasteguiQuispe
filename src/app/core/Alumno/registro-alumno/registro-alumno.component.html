@@ -1,0 +1,220 @@
+<div class="card">
+    <div class="card-header">
+        Registro Alumnos
+    </div>
+    <div class="card-body">
+
+        <div>
+            <div class="mb-3">
+                <label for="txtNombreBusqueda" class="form-label">Nombres y/o Apellidos</label>
+                <input type="text" (ngModelChange)="changeBuscar($event)" class="form-control"
+                    [(ngModel)]="NombreBuscar" id="txtNombreBusqueda" placeholder="Ingrese Nombre para la busqueda" />
+
+
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <button class="btn btn-lg btn-outline-primary" style="margin-left: 25px;"
+                        (click)="open(content)">Nuevo</button>
+                    <button class="btn btn-lg btn-outline-primary" style="margin-left: 25px;"
+                        (click)="LimpiarBusqueda()">Limpiar Busqueda</button>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th appTamanioTitulo *ngIf="ServLogin.IsAdmin">Eliminar</th>
+                    <th appTamanioTitulo  *ngIf="ServLogin.IsAdmin" >Editar</th>
+                    <th appTamanioTitulo>Nombres Completos</th>
+
+                    <th appTamanioTitulo>Tipo Documento</th>
+                    <th appTamanioTitulo>N° Documento</th>
+
+                    <th appTamanioTitulo>Fecha Nacimiento</th>
+
+                    <th appTamanioTitulo>Edad</th>
+                    <th appTamanioTitulo>Sexo</th>
+                    <th appTamanioTitulo>Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let alumno of  ObsAlumnos  | async;let indexOfelement=index">
+                    <td *ngIf="ServLogin.IsAdmin">
+                        <button type="button" class="btn btn-primary" (click)="EliminarAlumno(alumno.idAlumno)">
+                            <span class="glyphicon glyphicon-play" aria-hidden="true"></span> Eliminar
+                        </button>
+
+                    </td>
+                    <td *ngIf="ServLogin.IsAdmin">
+                        <button type="button" class="btn btn-primary" (click)="EditarAlumno(alumno,content)">
+                            <span class="glyphicon glyphicon-play" aria-hidden="true"></span> Editar
+                        </button>
+
+                    </td>
+                    <td> {{alumno.nombres ?? '' | nombreCompleto : alumno.apellidoPaterno ?? '' : alumno.apellidoMaterno
+                        ?? ''}}
+
+                    </td>
+                    <td> {{alumno.documento?.documento}}</td>
+                    <td> {{alumno.nroDocumento}}</td>
+
+                    <td> {{alumno.fechaNacimiento | date }}</td>
+
+                    <td> {{alumno.edad}}</td>
+                    <td> {{alumno.sexo == 'F' ? 'Femenino' : 'Masculino'}}</td>
+                    <td> {{alumno.email}}</td>
+
+
+                </tr>
+            </tbody>
+        </table>
+
+
+
+
+
+        <ng-template #content let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modal-basic-title">{{tituloModal}}</h4>
+                <button type="button" class="btn-close" aria-label="Close" (click)="d('Cross click')"></button>
+            </div>
+            <div class="modal-body">
+                <form action="#" [formGroup]="formulario" (ngSubmit)="submit($event)" class="">
+                    <input type="hidden" name="IdAlumno" formControlName="IdAlumno">
+                    <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">
+                        <ngb-panel title="Datos Personales" id="ngb-panel-0">
+                            <ng-template ngbPanelContent>
+
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label for="txtNombre" class="form-label">Nombres</label>
+                                        <input type="text" class="form-control"
+                                            [ngClass]="formulario.get('Nombres')?.status=='INVALID' && formulario.get('Nombres')?.touched==true ? 'Invalid-Input' : ( formulario.get('Nombres')?.status=='VALID'  ? 'Valid-Input': '')"
+                                            id="txtNombre" formControlName="Nombres"
+                                            placeholder="Ingrese Nombre del Alumno" />
+
+                                        <div *ngIf="formulario.get('Nombres')?.errors?.['required'] && formulario.get('Nombres')?.touched==true"
+                                            class="invalid-feedback" style="display: block;">* Campo Obligatorio</div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="txtApePat" class="form-label">Apellido Paterno</label>
+                                        <input type="text"
+                                            [ngClass]="formulario.get('ApellidoPaterno')?.status=='INVALID' && formulario.get('ApellidoPaterno')?.touched==true ? 'Invalid-Input' : (formulario.get('ApellidoPaterno')?.status=='VALID' ? 'Valid-Input' : '')"
+                                            class="form-control" id="txtApePat" formControlName="ApellidoPaterno"
+                                            placeholder="Apellido Paterno">
+                                        <div *ngIf="formulario.get('ApellidoPaterno')?.errors?.['required'] && formulario.get('ApellidoPaterno')?.touched==true"
+                                            class="invalid-feedback" style="display: block;">* Campo Obligatorio</div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="txtApeMat" class="form-label">Apellido Materno</label>
+                                        <input type="text"
+                                            [ngClass]="formulario.get('ApellidoMaterno')?.status=='INVALID' && formulario.get('ApellidoMaterno')?.touched==true ? 'Invalid-Input' : ( formulario.get('ApellidoMaterno')?.status=='VALID' ? 'Valid-Input':'')"
+                                            class="form-control" id="txtApeMat" placeholder="Apellido Materno"
+                                            formControlName="ApellidoMaterno">
+                                        <div *ngIf="formulario.get('ApellidoMaterno')?.errors?.['required'] && formulario.get('ApellidoMaterno')?.touched==true "
+                                            class="invalid-feedback" style="display: block;">* Campo Obligatorio</div>
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label for="cboTipoDoc" class="form-label">Tipo Documento</label>
+                                        <select id="cboTipoDoc"
+                                            [ngClass]="formulario.get('TipoDocumento')?.status=='INVALID' && formulario.get('TipoDocumento')?.touched==true ? 'Invalid-Input' : ( formulario.get('TipoDocumento')?.status=='VALID' ? 'Valid-Input' : '')"
+                                            class="form-control" formControlName="TipoDocumento">
+                                            <option value="" selected>Seleccione</option>
+                                            <option *ngFor="let tipodoc of ListaTipoDocumento"
+                                                [value]="tipodoc.idTipoDocumento">{{tipodoc.documento}}</option>
+                                        </select>
+
+                                        <div *ngIf="formulario.get('TipoDocumento')?.errors?.['required'] && formulario.get('TipoDocumento')?.touched==true "
+                                            class="invalid-feedback" style="display: block;">* Campo Obligatorio</div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="txtNroDoc" class="form-label">Nro Documento</label>
+                                        <input type="text"
+                                            [ngClass]="formulario.get('NroDocumento')?.status=='INVALID' && formulario.get('NroDocumento')?.touched==true ? 'Invalid-Input' : ( formulario.get('NroDocumento')?.status=='VALID' ? 'Valid-Input':'')"
+                                            class="form-control" id="txtNroDoc" placeholder="Numero de Documento"
+                                            formControlName="NroDocumento">
+                                        <div *ngIf="formulario.get('NroDocumento')?.errors?.['required'] && formulario.get('NroDocumento')?.touched==true "
+                                            class="invalid-feedback" style="display: block;">* Campo Obligatorio</div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label for="txtFecNac" class="form-label">Fecha Nacimiento</label>
+                                        <input type="date"
+                                            [ngClass]="formulario.get('FechaNacimiento')?.status=='INVALID' && formulario.get('FechaNacimiento')?.touched==true ? 'Invalid-Input' : ( formulario.get('FechaNacimiento')?.status=='VALID' ? 'Valid-Input':'')"
+                                            class="form-control" id="txtFecNac" placeholder="Fecha Nacimiento"
+                                            formControlName="FechaNacimiento">
+                                        <div *ngIf="formulario.get('FechaNacimiento')?.errors?.['required'] && formulario.get('FechaNacimiento')?.touched==true "
+                                            class="invalid-feedback" style="display: block;">* Campo Obligatorio</div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label for="txtEdad" class="form-label">Edad</label>
+                                        <input type="number"
+                                            [ngClass]="formulario.get('Edad')?.status=='INVALID'  && formulario.get('Edad')?.touched==true? 'Invalid-Input' : (formulario.get('Edad')?.status=='VALID' ? 'Valid-Input' : '')"
+                                            class="form-control" id="txtEdad" placeholder="Edad" formControlName="Edad">
+                                        <div *ngIf="formulario.get('Edad')?.errors?.['required'] && formulario.get('Edad')?.touched==true"
+                                            class="invalid-feedback" style="display: block;">* Campo Obligatorio</div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="cboSexo" class="form-label">Sexo</label>
+                                        <select id="cboSexo"
+                                            [ngClass]="formulario.get('Sexo')?.status=='INVALID' && formulario.get('Sexo')?.touched==true ? 'Invalid-Input' : ( formulario.get('Sexo')?.status=='VALID' ? 'Valid-Input' : '')"
+                                            class="form-control" formControlName="Sexo">
+                                            <option value="" selected>Seleccione</option>
+                                            <option value="M">Masculino</option>
+                                            <option value="F">Femenino</option>
+                                        </select>
+                                        <div *ngIf="formulario.get('Sexo')?.errors?.['required'] && formulario.get('Sexo')?.touched==true"
+                                            class="invalid-feedback" style="display: block;">* Campo Obligatorio</div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="txtEmail" class="form-label">Email</label>
+                                        <input type="email"
+                                            [ngClass]="formulario.get('Email')?.status=='INVALID' && formulario.get('Email')?.touched==true ? 'Invalid-Input' : (formulario.get('Email')?.status=='VALID' ? 'Valid-Input' : '')"
+                                            class="form-control" id="txtEmail" formControlName="Email"
+                                            placeholder="Email">
+                                        <div *ngIf="formulario.get('Email')?.errors?.['required'] && formulario.get('Email')?.touched==true"
+                                            class="invalid-feedback" style="display: block;">* Campo Obligatorio</div>
+                                        <div *ngIf="formulario.get('Email')?.errors?.['email'] && formulario.get('Email')?.touched==true"
+                                            class="invalid-feedback" style="display: block;">* Formato de Email
+                                            Incorrecto</div>
+                                    </div>
+                                </div>
+
+
+
+
+
+
+                            </ng-template>
+                        </ngb-panel>
+
+                        
+                    </ngb-accordion>
+
+
+
+                    <div class="col-md-12" style="text-align: center; padding-top: 30px;">
+                        <button type="submit" class="btn btn-primary" [disabled]="!formulario.valid">Guardar</button>
+                        <div *ngIf="!formulario.valid" style="display: block;" class="invalid-feedback">* Es necesario
+                            completar todos los campos</div>
+                    </div>
+                </form>
+            </div>
+
+        </ng-template>
+
+
+    </div>
+</div>

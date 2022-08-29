@@ -1,0 +1,21 @@
+<div class="wrapper fadeInDown">
+    <div id="formContent">
+      <!-- Tabs Titles -->
+  
+      <!-- Icon -->
+      <div class="fadeIn first">
+        <img style="width: 100px; height: 100px;" src="https://cdn1.iconfinder.com/data/icons/elevator/154/elevator-user-man-ui-round-login-512.png" id="icon" alt="User Icon" />
+      </div>
+  
+      <!-- Login Form -->
+      <form action="#" [formGroup]="formulario" (ngSubmit)="submit($event)" >
+        <input type="text" id="login" class="fadeIn second" name="login" formControlName="UserName" placeholder="Usuario">
+        <input type="password" id="password" class="fadeIn third" name="login" formControlName="Password" placeholder="Contraseña">
+        <input type="submit" class="fadeIn fourth" value="Iniciar Sesion">
+      </form>
+  
+      <!-- Remind Passowrd -->
+     
+  
+    </div>
+  </div>
